@@ -1,18 +1,53 @@
-﻿@model dynamic
-
+﻿
 @{
 	Layout = null;
 }
 
 <!DOCTYPE html>
-
+<script src="~/scripts/jquery-1.9.1.js"></script>
+<script src="~/scripts/jquery.signalR-2.1.2.js"></script>
+<script src="~/scripts/knockout-3.4.0.js"></script>
+<script src="/signalr/hubs"></script>
 <html>
 <head>
-	<title>title</title>
+	<title>Queue Thing</title>
 </head>
 <body>
+<h1>Dynamic Queue Details</h1>
 <div>
-	  
+
 </div>
 </body>
 </html>
+
+<script>
+	$(function() {
+		
+		function QueueItem(depth, name) {
+			this.Depth = ko.observable(depth);
+			this.Name = ko.observable(name);
+		}
+
+		function QueuesBoard() {
+			this.hub = $.connection.dashHub;
+			this.queues = ko.observableArray([]);
+			var queues = this.queues;
+
+			this.init = function() {
+				this.hub.hello();
+			};
+
+			this.hub.populateQueues = function(queuesArray) {
+				var queuesCollection = $.map(queuesArray,
+					function(item) {
+						return new QueueItem(item.Depth, item.Name);
+					});
+				queues(queuesCollection);
+			};
+		};
+
+		var queuesBoard = new QueuesBoard();
+		$.connection.hub.start(function () { queuesBoard.init(); });
+		ko.applyBindings(queuesBoard);
+	})
+</script>
