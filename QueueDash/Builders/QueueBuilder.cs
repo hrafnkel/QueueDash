@@ -40,8 +40,7 @@ namespace QueueDash.Builders
         {
             int count = 0;
             var enumerator = mq.GetMessageEnumerator2();
-            while (enumerator.MoveNext())
-                count++;
+            while (enumerator.MoveNext()) count++;
 
             return count;
         }
