@@ -16,39 +16,32 @@
 <body>
 <h1>Dynamic Queue Details</h1>
 <div>
+	<p>Status:</p>
 
+	<ul id="status">
+		<li>Loading hub...</li>
+	</ul>
 </div>
 </body>
 </html>
 
 <script>
-	$(function() {
-		
-		function QueueItem(depth, name) {
-			this.Depth = ko.observable(depth);
-			this.Name = ko.observable(name);
-		}
+	$(function () {
+		var hub = $.connection.dashHub;
+		//window.registerClientMethods(hub);
 
-		function QueuesBoard() {
-			this.hub = $.connection.dashHub;
-			this.queues = ko.observableArray([]);
-			var queues = this.queues;
-
-			this.init = function() {
-				this.hub.hello();
-			};
-
-			this.hub.populateQueues = function(queuesArray) {
-				var queuesCollection = $.map(queuesArray,
-					function(item) {
-						return new QueueItem(item.Depth, item.Name);
+		$.connection.hub.start()
+			.done(function () {
+				$("#status").children().first().text("Hub loaded.");
+				hub.server.hello()
+					.done(function(queues) {
+						$.each(queues,
+							function() {
+								alert(this.Name + ' ' + this.Depth);
+							});
 					});
-				queues(queuesCollection);
-			};
-		};
-
-		var queuesBoard = new QueuesBoard();
-		$.connection.hub.start(function () { queuesBoard.init(); });
-		ko.applyBindings(queuesBoard);
+			})
+			.fail(function () {
+         		$("#status").children().first().text("Hub failed");});
 	})
 </script>

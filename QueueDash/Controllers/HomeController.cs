@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Microsoft.AspNet.SignalR;
 using QueueDash.Models;
 using QueueDash.Presenters;
 
@@ -16,8 +17,10 @@ namespace QueueDash.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            IHubContext context = GlobalHost.ConnectionManager.GetHubContext<DashHub>();
             DashboardViewModel vm = _presenter.GetDashboardData();
-            return View(vm);
+            context.Clients.All.Hello(vm);
+            return View();
         }
     }
 }

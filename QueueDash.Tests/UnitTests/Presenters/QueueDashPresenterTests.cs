@@ -54,7 +54,7 @@ namespace QueueDash.Tests.UnitTests.Presenters
                 {
                     Depth = 1,
                     LongName = "Long name",
-                    Name = @".\private$\test"
+                    Name = @"private$\test"
                 }
             };
         }

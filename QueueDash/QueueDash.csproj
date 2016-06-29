@@ -250,13 +250,13 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DashHub.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Builders\IQueueBuilder.cs" />
     <Compile Include="Builders\QueueBuilder.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Models\DashboardViewModel.cs" />
     <Compile Include="Models\QueueData.cs" />
     <Compile Include="Models\QueueDetails.cs" />
