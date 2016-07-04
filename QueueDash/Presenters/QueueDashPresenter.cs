@@ -43,7 +43,7 @@ namespace QueueDash.Presenters
 
         private string TrimQueueName(string name)
         {
-            string subString = name.Substring(11);
+            string subString = name.Substring(9);
             return subString;
         }
     }
