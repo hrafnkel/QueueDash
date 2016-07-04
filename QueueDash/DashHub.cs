@@ -2,25 +2,19 @@
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using QueueDash.Models;
-using QueueDash.Presenters;
+using QueueDash.Repositories;
 
 namespace QueueDash
 {
     [HubName("dashHub")]
     public class DashHub : Hub
     {
-        //private readonly IQueueDashPresenter _presenter;
+        readonly QueueRepository _repository = new QueueRepository();
 
-        //public DashHub(IQueueDashPresenter presenter)
-        //{
-        //    _presenter = presenter;
-        //}
-
-        public void Hello(DashboardViewModel vm)
+        public void Hello()
         {
-            //DashboardViewModel vm = _presenter.GetDashboardData();
-            List<QueueData> queues = vm.Queues;
-            Clients.All.populateQueues(queues.ToArray());
+            List<QueueData> queues = _repository.GetDashboardData();
+            Clients.All.populateQueues(queues);
         }
     }
 }
