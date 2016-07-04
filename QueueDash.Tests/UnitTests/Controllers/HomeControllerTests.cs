@@ -26,7 +26,7 @@ namespace QueueDash.Tests.UnitTests.Controllers
             List<QueueData> queues = new List<QueueData> {queueData};
             DashboardViewModel vm = new DashboardViewModel {Queues = queues};
             _presenterMock.Setup(x => x.GetDashboardData()).Returns(vm);
-            HomeController controller = new HomeController(_presenterMock.Object);
+            HomeController controller = new HomeController();
 
             ViewResult result = (ViewResult) controller.Index();
 
