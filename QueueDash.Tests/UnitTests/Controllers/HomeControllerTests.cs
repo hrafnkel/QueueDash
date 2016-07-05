@@ -22,19 +22,13 @@ namespace QueueDash.Tests.UnitTests.Controllers
         [Test]
         public void CreateDashboardViewModel()
         {
-            QueueData queueData = new QueueData {Depth = 1, Name = "Name"};
-            List<QueueData> queues = new List<QueueData> {queueData};
-            DashboardViewModel vm = new DashboardViewModel {Queues = queues};
-            _presenterMock.Setup(x => x.GetDashboardData()).Returns(vm);
             HomeController controller = new HomeController();
 
             ViewResult result = (ViewResult) controller.Index();
 
             DashboardViewModel resultViewModel = (DashboardViewModel) result.Model;
-            int count = resultViewModel.Queues.Count;
-            string name = resultViewModel.Queues[0].Name;
-            Assert.That(count, Is.EqualTo(1));
-            Assert.That(name,Is.EqualTo("Name"));
+            
+            Assert.That(resultViewModel, Is.EqualTo(null));
         }
     }
 }
