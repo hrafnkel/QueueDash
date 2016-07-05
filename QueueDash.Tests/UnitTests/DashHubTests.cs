@@ -13,16 +13,14 @@ namespace QueueDash.Tests.UnitTests
     public class DashHubTests
     {
         [Test]
-        public void HubsAreMockableViaDynamic()
+        public void HubsHelloIsExecuted()
         {
             bool helloCalled = false;
             var hub = new DashHub();
             var mockClients = new Mock<IHubCallerConnectionContext<dynamic>>();
-            var repositoryMoq = new Mock<IQueueRepository>();
             hub.Clients = mockClients.Object;
             dynamic all = new ExpandoObject();
             all.populateQueues = new Action<List<QueueData>>((queues) => { helloCalled = true; });
-            repositoryMoq.Setup(x => x.GetLocalQueues());
             mockClients.Setup(m => m.All).Returns((ExpandoObject)all);
             hub.Hello();
             Assert.True(helloCalled);
