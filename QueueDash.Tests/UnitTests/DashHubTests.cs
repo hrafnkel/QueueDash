@@ -5,7 +5,6 @@ using Microsoft.AspNet.SignalR.Hubs;
 using Moq;
 using NUnit.Framework;
 using QueueDash.Models;
-using QueueDash.Repositories;
 
 namespace QueueDash.Tests.UnitTests
 {
@@ -16,8 +15,8 @@ namespace QueueDash.Tests.UnitTests
         public void HubsHelloIsExecuted()
         {
             bool helloCalled = false;
-            var hub = new DashHub();
-            var mockClients = new Mock<IHubCallerConnectionContext<dynamic>>();
+            DashHub hub = new DashHub();
+            Mock<IHubCallerConnectionContext<dynamic>> mockClients = new Mock<IHubCallerConnectionContext<dynamic>>();
             hub.Clients = mockClients.Object;
             dynamic all = new ExpandoObject();
             all.populateQueues = new Action<List<QueueData>>((queues) => { helloCalled = true; });

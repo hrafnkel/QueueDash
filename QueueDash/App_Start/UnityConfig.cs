@@ -1,6 +1,5 @@
 using System;
 using Microsoft.Practices.Unity;
-using Microsoft.Practices.Unity.Configuration;
 using QueueDash.Builders;
 using QueueDash.Presenters;
 using QueueDash.Repositories;
