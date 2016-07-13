@@ -192,6 +192,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="scripts\angular.min.js.map" />
+    <Content Include="scripts\Chart.js" />
+    <Content Include="scripts\Chart.min.js" />
     <Content Include="scripts\jquery-1.9.1.min.map" />
     <None Include="scripts\jquery-3.0.0.intellisense.js" />
     <Content Include="scripts\jquery-3.0.0.js" />
