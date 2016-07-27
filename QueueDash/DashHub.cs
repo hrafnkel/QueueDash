@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using QueueDash.Models;
@@ -15,6 +16,20 @@ namespace QueueDash
         {
             List<QueueData> queues = _repository.GetDashboardData();
             Clients.All.populateQueues(queues);
+        }
+
+        public void Refresh(bool calledFromTest)
+        {
+            int timeout = 50000;
+            Stopwatch sw = Stopwatch.StartNew();
+            while (true)
+            {
+                List<QueueData> queues = _repository.GetDashboardData();
+                Clients.All.populateQueues(queues);
+                System.Threading.Thread.Sleep(1000);
+                if (calledFromTest && (sw.ElapsedMilliseconds > timeout)) break;
+            }
+            return;
         }
     }
 }
