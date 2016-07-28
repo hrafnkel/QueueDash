@@ -14,7 +14,13 @@ namespace QueueDash.Repositories
             return GetPrivateQueuesByMachine(machineName);
         }
 
-        public List<QueueDetails> GetLocalQueueDetails()
+        public List<QueueData> GetDashboardData()
+        {
+            List<QueueDetails> queueDetails = GetLocalQueueDetails();
+            return MapDetailsToData(queueDetails);
+        }
+
+        private List<QueueDetails> GetLocalQueueDetails()
         {
             List<MessageQueue> queues = GetLocalQueues();
 
@@ -24,12 +30,6 @@ namespace QueueDash.Repositories
                 LongName = messageQueue.FormatName,
                 Name = messageQueue.QueueName
             }).ToList();
-        }
-
-        public List<QueueData> GetDashboardData()
-        {
-            List<QueueDetails> queueDetails = GetLocalQueueDetails();
-            return MapDetailsToData(queueDetails);
         }
 
         private List<QueueData> MapDetailsToData(List<QueueDetails> queueDetails)
@@ -57,7 +57,7 @@ namespace QueueDash.Repositories
         private int GetQueueDepth(MessageQueue mq)
         {
             int count = 0;
-            var enumerator = mq.GetMessageEnumerator2();
+            MessageEnumerator enumerator = mq.GetMessageEnumerator2();
             while (enumerator.MoveNext()) count++;
 
             return count;

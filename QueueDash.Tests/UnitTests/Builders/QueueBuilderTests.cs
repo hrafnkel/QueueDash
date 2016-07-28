@@ -11,7 +11,6 @@ namespace QueueDash.Tests.UnitTests.Builders
     [TestFixture]
     public class QueueBuilderTests
     {
-        const string TestQueue = @".\private$\test";
         private MessageQueue _mq;
         private List<MessageQueue> _queueList;
 
@@ -21,11 +20,8 @@ namespace QueueDash.Tests.UnitTests.Builders
         [SetUp]
         public void SetUp()
         {
-            _queueRepositoryMock = new Mock<IQueueRepository>();
+            _queueRepositoryMock = new Mock<IQueueRepository>(MockBehavior.Strict);
             _queueBuilder = new QueueBuilder(_queueRepositoryMock.Object);
-
-            _mq = !MessageQueue.Exists(TestQueue) ? MessageQueue.Create(TestQueue, false) : new MessageQueue(TestQueue);
-            _queueList = new List<MessageQueue> { _mq };
         }
 
         [Test]
@@ -43,7 +39,7 @@ namespace QueueDash.Tests.UnitTests.Builders
         [Test]
         public void GetLocalQueues_Is_Called_From_Builder()
         {
-            _queueRepositoryMock.Setup(x => x.GetLocalQueues());
+            _queueRepositoryMock.Setup(x => x.GetLocalQueues()).Returns(_queueList);
 
             _queueBuilder.GetLocalQueues();
 
@@ -63,17 +59,22 @@ namespace QueueDash.Tests.UnitTests.Builders
         [Test]
         public void GetLocalQueueNames_Returns_Queue_Names()
         {
+            const string expected = "DIRECT=OS:bur5-9slsv42\\private$\\test";
+            GivenAListOfQueues();
             _queueRepositoryMock.Setup(x => x.GetLocalQueues()).Returns(_queueList);
 
             List<string> queueNames = _queueBuilder.GetLocalQueueNames();
             var name = queueNames[0];
 
-            Assert.That(name, Is.EqualTo("DIRECT=OS:bur5-9slsv42\\private$\\test"));
+            Assert.That(name, Is.EqualTo(expected));
         }
 
         [Test]
         public void GetLocalQueueDetails_Returns_Queue_Details()
         {
+            const string expectedLongName = "DIRECT=OS:bur5-9slsv42\\private$\\test";
+            const string expectedShortName = "private$\\test";
+            GivenAListOfQueues();
             _queueRepositoryMock.Setup(x => x.GetLocalQueues()).Returns(_queueList);
 
             List<QueueDetails> queueDetails = _queueBuilder.GetLocalQueueDetails();
@@ -81,21 +82,22 @@ namespace QueueDash.Tests.UnitTests.Builders
             string longName = detail.LongName;
             string name = detail.Name;
 
-            Assert.That(longName, Is.EqualTo("DIRECT=OS:bur5-9slsv42\\private$\\test"));
-            Assert.That(name, Is.EqualTo("private$\\test"));
+            Assert.That(longName, Is.EqualTo(expectedLongName));
+            Assert.That(name, Is.EqualTo(expectedShortName));
+        }
+
+        private void GivenAListOfQueues()
+        {
+            const string TestQueue = @".\private$\test";
+            _mq = !MessageQueue.Exists(TestQueue) ? MessageQueue.Create(TestQueue, false) : new MessageQueue(TestQueue);
+            _queueList = new List<MessageQueue> { _mq };
         }
 
         [TearDown]
         public void Teardown()
         {
+            const string TestQueue = @".\private$\test";
             if (MessageQueue.Exists(TestQueue)) MessageQueue.Delete(TestQueue);
-        }
-
-        private void Write_HelloWorld_On_Queue()
-        {
-            string message = "Hello World";
-            _mq.Formatter = new XmlMessageFormatter();
-            _mq.Send(message);
         }
     }
 }
