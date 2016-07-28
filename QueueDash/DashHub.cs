@@ -29,7 +29,6 @@ namespace QueueDash
                 System.Threading.Thread.Sleep(1000);
                 if (calledFromTest && (sw.ElapsedMilliseconds > timeout)) break;
             }
-            return;
         }
     }
 }

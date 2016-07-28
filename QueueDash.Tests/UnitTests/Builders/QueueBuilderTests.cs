@@ -88,16 +88,16 @@ namespace QueueDash.Tests.UnitTests.Builders
 
         private void GivenAListOfQueues()
         {
-            const string TestQueue = @".\private$\test";
-            _mq = !MessageQueue.Exists(TestQueue) ? MessageQueue.Create(TestQueue, false) : new MessageQueue(TestQueue);
+            const string testQueue = @".\private$\test";
+            _mq = !MessageQueue.Exists(testQueue) ? MessageQueue.Create(testQueue, false) : new MessageQueue(testQueue);
             _queueList = new List<MessageQueue> { _mq };
         }
 
         [TearDown]
         public void Teardown()
         {
-            const string TestQueue = @".\private$\test";
-            if (MessageQueue.Exists(TestQueue)) MessageQueue.Delete(TestQueue);
+            const string testQueue = @".\private$\test";
+            if (MessageQueue.Exists(testQueue)) MessageQueue.Delete(testQueue);
         }
     }
 }
