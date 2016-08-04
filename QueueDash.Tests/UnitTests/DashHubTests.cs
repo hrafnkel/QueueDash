@@ -5,23 +5,33 @@ using Microsoft.AspNet.SignalR.Hubs;
 using Moq;
 using NUnit.Framework;
 using QueueDash.Models;
+using QueueDash.Repositories;
 
 namespace QueueDash.Tests.UnitTests
 {
     [TestFixture]
     public class DashHubTests
     {
+        private Mock<QueueRepository> _repositoryMock;
+        private DashHub _hub;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _repositoryMock = new Mock<QueueRepository>();
+            _hub = new DashHub(_repositoryMock.Object);
+        }
+
         [Test]
         public void HubsHelloIsExecuted()
         {
             bool helloCalled = false;
-            DashHub hub = new DashHub();
             Mock<IHubCallerConnectionContext<dynamic>> mockClients = new Mock<IHubCallerConnectionContext<dynamic>>();
-            hub.Clients = mockClients.Object;
+            _hub.Clients = mockClients.Object;
             dynamic all = new ExpandoObject();
             all.populateQueues = new Action<List<QueueData>>((queues) => { helloCalled = true; });
             mockClients.Setup(m => m.All).Returns((ExpandoObject)all);
-            hub.Hello();
+            _hub.Hello();
             Assert.True(helloCalled);
         }
 
@@ -29,13 +39,12 @@ namespace QueueDash.Tests.UnitTests
         public void HubsRefreshIsExecuted()
         {
             bool refreshCalled = false;
-            DashHub hub = new DashHub();
             Mock<IHubCallerConnectionContext<dynamic>> mockClients = new Mock<IHubCallerConnectionContext<dynamic>>();
-            hub.Clients = mockClients.Object;
+            _hub.Clients = mockClients.Object;
             dynamic all = new ExpandoObject();
             all.populateQueues = new Action<List<QueueData>>((queues) => { refreshCalled = true; });
             mockClients.Setup(m => m.All).Returns((ExpandoObject)all);
-            hub.Refresh(true);
+            _hub.Refresh(true);
             Assert.True(refreshCalled);
         }
     }

@@ -14,10 +14,13 @@ namespace QueueDash.Repositories
             return GetPrivateQueuesByMachine(machineName);
         }
 
-        public List<QueueData> GetDashboardData()
+        public List<QueueData> DashboardData
         {
-            List<QueueDetails> queueDetails = GetLocalQueueDetails();
-            return MapDetailsToData(queueDetails);
+            get
+            {
+                List<QueueDetails> queueDetails = GetLocalQueueDetails();
+                return MapDetailsToData(queueDetails);
+            }
         }
 
         private List<QueueDetails> GetLocalQueueDetails()
@@ -34,18 +37,11 @@ namespace QueueDash.Repositories
 
         private List<QueueData> MapDetailsToData(List<QueueDetails> queueDetails)
         {
-            List<QueueData> queuesData = new List<QueueData>();
-            foreach (QueueDetails details in queueDetails)
+            return queueDetails.Select(details => new QueueData
             {
-                QueueData data = new QueueData
-                {
-                    Depth = details.Depth,
-                    Name = TrimQueueName(details.Name)
-                };
-
-                queuesData.Add(data);
-            }
-            return queuesData;
+                Depth = details.Depth,
+                Name = TrimQueueName(details.Name)
+            }).ToList();
         }
 
         private string TrimQueueName(string name)

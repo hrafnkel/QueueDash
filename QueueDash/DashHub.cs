@@ -12,12 +12,18 @@ namespace QueueDash
     [HubName("dashHub")]
     public class DashHub : Hub
     {
-        readonly QueueRepository _repository = new QueueRepository();
-        private List<QueueData> _oldQueueData = new List<QueueData>();
+        private readonly QueueRepository _repository;
+        private List<QueueData> _oldQueueData;
+
+        public DashHub(QueueRepository repository)
+        {
+            _repository = repository;
+            _oldQueueData = new List<QueueData>();
+        }
 
         public void Hello()
         {
-            List<QueueData> queues = _repository.GetDashboardData();
+            List<QueueData> queues = _repository.DashboardData;
             Clients.All.populateQueues(queues);
         }
 
@@ -27,7 +33,7 @@ namespace QueueDash
             Stopwatch sw = Stopwatch.StartNew();
             while (true)
             {
-                List<QueueData> queues = _repository.GetDashboardData();
+                List<QueueData> queues = _repository.DashboardData;
                 if (QueueDataHasChanged(queues)) Clients.All.populateQueues(queues);
                 System.Threading.Thread.Sleep(2000);
                 if (calledFromTest && (sw.ElapsedMilliseconds > timeout)) break;
