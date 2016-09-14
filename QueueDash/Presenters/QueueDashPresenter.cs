@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using QueueDash.Builders;
+﻿using QueueDash.Builders;
 using QueueDash.Models;
+using System.Collections.Generic;
 
 namespace QueueDash.Presenters
 {
-    
+
     public class QueueDashPresenter : IQueueDashPresenter
     {
         private readonly IQueueBuilder _queueBuilder;
@@ -16,7 +16,6 @@ namespace QueueDash.Presenters
 
         public DashboardViewModel GetDashboardData()
         {
-            
             List<QueueDetails> queueDetails = _queueBuilder.GetLocalQueueDetails();
             return MapDetailsToModel(queueDetails);
         }
@@ -43,8 +42,7 @@ namespace QueueDash.Presenters
 
         private string TrimQueueName(string name)
         {
-            string subString = name.Substring(9);
-            return subString;
+            return name.Substring(9);
         }
     }
 }

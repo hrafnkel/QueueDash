@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Messaging;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using QueueDash.Builders;
 using QueueDash.Models;
 using QueueDash.Repositories;
+using System.Collections.Generic;
+using System.Messaging;
 
 namespace QueueDash.Tests.UnitTests.Builders
 {
@@ -64,7 +64,7 @@ namespace QueueDash.Tests.UnitTests.Builders
             _queueRepositoryMock.Setup(x => x.GetLocalQueues()).Returns(_queueList);
 
             List<string> queueNames = _queueBuilder.GetLocalQueueNames();
-            var name = queueNames[0];
+            string name = queueNames[0];
 
             Assert.That(name, Is.EqualTo(expected));
         }
