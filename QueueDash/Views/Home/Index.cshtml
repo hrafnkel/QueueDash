@@ -11,32 +11,69 @@
 </head>
 <body>
 <script src="~/scripts/jquery-1.9.1.js"></script>
-<script src="~/scripts/jquery.signalR-2.1.2.js"></script>
-<script src="~/scripts/knockout-3.4.0.js"></script>
+<script src="~/scripts/jquery.signalR-2.2.0.js"></script>
+<script src="~/scripts/Chart.js"></script>
 <script src="/signalr/hubs"></script>
-<script>
-	$(function () {
-		var connection = $.hubConnection();
-		var hub = connection.createHubProxy("dashHub");
-		hub.on("populateQueues",
-			function(queues) {
-				jQuery.each(queues, function(i, val) {
-					$('#status').append('<li>' + val.Name+'='+val.Depth+'</li>');
-				});
-			});
-		connection.start().done(function() {
-			hub.invoke('hello');
-		});
-	})
-</script>
-<h1>Dynamic Queue Details</h1>
-<div>
-	<p>Status:</p>
 
-	<ul id="status">
-		<li>Loading hub...</li>
-	</ul>
+<h1>Dynamic Queue Details</h1>
+<div style="height: 80%">
+	<canvas id="myChart"></canvas>
 </div>
 </body>
 </html>
 
+<script type="text/javascript">
+	$(function () {
+		var hub = $.connection.dashHub;
+
+		$.connection.hub.start().done(function () {
+			hub.invoke('refresh', false);
+		});
+		
+		hub.on("populateQueues",
+			function(queues) {
+				updateScreen(queues);
+			});
+	});
+
+	function updateScreen(q) {
+		var labelArray = new Array;
+		var dataArray = new Array;
+		jQuery.each(q, function (i, val) {
+			labelArray.push(val.Name);
+			dataArray.push(val.Depth);
+		});
+		drawMyChart(labelArray, dataArray);
+	};
+
+	function drawMyChart(la, da) {
+		var myChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: la,
+				datasets: [{
+					label: '# of Messages',
+					data: da,
+					borderWidth: 1
+				}]
+			},
+			options: {
+				maintainAspectRatio: true,
+				scaleOverride: true,
+				scaleStartValue: 0,
+				scaleStepWidth: 100,
+				scaleSteps: 9,
+				scaleBeginAtZero: true,
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: true
+						}
+					}]
+				}
+			}
+		});
+	};
+
+	var ctx = document.getElementById("myChart");
+</script>

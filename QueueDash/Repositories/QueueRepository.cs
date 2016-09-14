@@ -14,7 +14,16 @@ namespace QueueDash.Repositories
             return GetPrivateQueuesByMachine(machineName);
         }
 
-        public List<QueueDetails> GetLocalQueueDetails()
+        public List<QueueData> DashboardData
+        {
+            get
+            {
+                List<QueueDetails> queueDetails = GetLocalQueueDetails();
+                return MapDetailsToData(queueDetails);
+            }
+        }
+
+        private List<QueueDetails> GetLocalQueueDetails()
         {
             List<MessageQueue> queues = GetLocalQueues();
 
@@ -26,26 +35,13 @@ namespace QueueDash.Repositories
             }).ToList();
         }
 
-        public List<QueueData> GetDashboardData()
-        {
-            List<QueueDetails> queueDetails = GetLocalQueueDetails();
-            return MapDetailsToData(queueDetails);
-        }
-
         private List<QueueData> MapDetailsToData(List<QueueDetails> queueDetails)
         {
-            List<QueueData> queuesData = new List<QueueData>();
-            foreach (QueueDetails details in queueDetails)
+            return queueDetails.Select(details => new QueueData
             {
-                QueueData data = new QueueData
-                {
-                    Depth = details.Depth,
-                    Name = TrimQueueName(details.Name)
-                };
-
-                queuesData.Add(data);
-            }
-            return queuesData;
+                Depth = details.Depth,
+                Name = TrimQueueName(details.Name)
+            }).ToList();
         }
 
         private string TrimQueueName(string name)
@@ -57,7 +53,7 @@ namespace QueueDash.Repositories
         private int GetQueueDepth(MessageQueue mq)
         {
             int count = 0;
-            var enumerator = mq.GetMessageEnumerator2();
+            MessageEnumerator enumerator = mq.GetMessageEnumerator2();
             while (enumerator.MoveNext()) count++;
 
             return count;

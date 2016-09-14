@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using QueueDash.Models;
+using QueueDash.Repositories;
+using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
-using QueueDash.Models;
-using QueueDash.Repositories;
 
 namespace QueueDash.Builders
 {
