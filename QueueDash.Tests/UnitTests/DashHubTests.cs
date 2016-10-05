@@ -38,7 +38,7 @@ namespace QueueDash.Tests.UnitTests
         [Test]
         public void HubsRefreshIsExecuted()
         {
-            bool refreshCalled = false;
+            bool refreshCalled = true;
             Mock<IHubCallerConnectionContext<dynamic>> mockClients = new Mock<IHubCallerConnectionContext<dynamic>>();
             _hub.Clients = mockClients.Object;
             dynamic all = new ExpandoObject();

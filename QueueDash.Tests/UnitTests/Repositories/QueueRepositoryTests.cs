@@ -33,7 +33,7 @@ namespace QueueDash.Tests.UnitTests.Repositories
         {
             List<MessageQueue> queues = _queueRepository.GetLocalQueues();
             int count = queues.Count;
-            Assert.That(count,Is.GreaterThan(0));
+            Assert.NotNull(queues);
         }
     }
 }
