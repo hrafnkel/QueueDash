@@ -3,6 +3,7 @@ using NUnit.Framework;
 using QueueDash.Builders;
 using QueueDash.Models;
 using QueueDash.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Messaging;
 
@@ -16,12 +17,15 @@ namespace QueueDash.Tests.UnitTests.Builders
 
         private QueueBuilder _queueBuilder;
         private Mock<IQueueRepository> _queueRepositoryMock;
+        private string hostname = string.Empty;
 
         [SetUp]
         public void SetUp()
         {
             _queueRepositoryMock = new Mock<IQueueRepository>(MockBehavior.Strict);
             _queueBuilder = new QueueBuilder(_queueRepositoryMock.Object);
+            hostname = Environment.MachineName.ToLower();
+
         }
 
         [Test]
@@ -59,7 +63,7 @@ namespace QueueDash.Tests.UnitTests.Builders
         [Test]
         public void GetLocalQueueNames_Returns_Queue_Names()
         {
-            const string expected = "DIRECT=OS:bur5-9slsv42\\private$\\test";
+            string expected = $"DIRECT=OS:{hostname}\\private$\\test";
             GivenAListOfQueues();
             _queueRepositoryMock.Setup(x => x.GetLocalQueues()).Returns(_queueList);
 
@@ -72,7 +76,7 @@ namespace QueueDash.Tests.UnitTests.Builders
         [Test]
         public void GetLocalQueueDetails_Returns_Queue_Details()
         {
-            const string expectedLongName = "DIRECT=OS:bur5-9slsv42\\private$\\test";
+            string expectedLongName = $"DIRECT=OS:{hostname}\\private$\\test";
             const string expectedShortName = "private$\\test";
             GivenAListOfQueues();
             _queueRepositoryMock.Setup(x => x.GetLocalQueues()).Returns(_queueList);
